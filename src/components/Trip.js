@@ -1,32 +1,35 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { gql } from "apollo-boost";
 import { Query } from 'react-apollo'
 
 const SALIDAS = gql`
-query NextStops ($id: String! $now: time!){
-  stop_times(where: {trip: {service_id: {_eq: "invl_20.pex"}}, stop_id: {_eq: $id}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}, limit: 10) {
-    arrival_time
-    stop {
-      stop_name
+query TripByPk($id: String!) {
+  trips_by_pk(trip_id: $id) {
+    trip_headsign
+    trip_id
+    stop_times(order_by: {departure_time: asc}) {
+      arrival_time
+      stop {
+        stop_name
+        stop_id
+      }
     }
-    trip {
-      trip_headsign
-    }
-	trip_id
   }
 }`
 
-const Salidas = (props) => {
+const Trip = (props) => {
 
     const id = props.match.params.id;
+    let stop_id = 0
+	if(props.location.data) stop_id=props.location.data.id;
+	console.log(stop_id);
 	let now =  new Date(); 
 	let now_string= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
 	console.log(now_string);
     return(
         //<Query query={LINEAK} variables={{id: user.sub, hilabetea:2, urtea:2020}}  >
-        <Query query={SALIDAS}variables={{id: id, now: now_string}}  >
+        <Query query={SALIDAS}variables={{id: id}}  >
         {({ loading, error, data }) => {
             if (loading) return <Spinner color="#bf3e2d" />
             if (error) return <div>Error ${error}  </div>
@@ -34,11 +37,12 @@ const Salidas = (props) => {
             return (
                 <div className="lineak">
 					<ul>
-						{data.stop_times.map(stop_time => {
-							const { arrival_time, stop, trip, trip_id} = stop_time;
+						{data.trips_by_pk.stop_times.map(stop_time => {
+							const { arrival_time, stop } = stop_time;
+							const isSelected = stop.stop_id==stop_id;
 							return  (
-								<li key={trip_id}>
-									<Link to={{ pathname: `/trip/${trip_id}`, data: {id}}} ><h3>{stop.stop_name} - Dirección {trip.trip_headsign}</h3></Link>
+								<li className={isSelected ? "selected" : ""} key={stop.stop_id}>
+									<h3>{stop.stop_name} - {arrival_time}</h3>
 									<p>{arrival_time}</p>
 								</li>
 							)}
@@ -51,4 +55,4 @@ const Salidas = (props) => {
     )
 };
 
-export default Salidas;
+export default Trip;

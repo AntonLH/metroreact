@@ -36,8 +36,6 @@ const Paradas = () => {
             if (loading) return <Spinner color="#bf3e2d" />
             if (error) return <div>Error ${error}  </div>
 
-
-
 			return (
 				<div className="lineak">
 				<ul>

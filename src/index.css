@@ -18,6 +18,9 @@ code {
 .lineak ul{
 	width: 50%;
 }
+.lineak ul li.selected{
+	color: #e95e27;
+}
 .map{
 	height: 500px;
 	width:50%;
