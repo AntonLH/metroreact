@@ -1,0 +1,36 @@
+:root {
+    --font-family: Arial, sans-serif;
+    --font-size: 16px;
+    --line-height: 1.5;
+
+    --primary-color: #bf3e2d;
+    --secondary-color: #536390;
+    --font-color: #111111;
+    
+    --color-code: #fdf0f0;
+    --bg-color: #fff;
+    --link-color: #2179BF;
+    --form-bg-color: #e2e2e2;
+    --form-border-color: #f2f2f2;
+}
+
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+
+@mixin for-desktop-up {
+  @media (min-width: 1350px) { @content; }
+}
+
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+

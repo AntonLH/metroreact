@@ -20,7 +20,6 @@ const App = () => {
     return (
     <ApolloProvider client={client}>
             <div className="App">
-                <Header />
                 <main>
                 <Switch>
                   <Route exact path="/" component={Lineas} />

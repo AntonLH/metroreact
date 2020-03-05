@@ -1,0 +1,51 @@
+header {
+    background-color: var(--primary-color);
+    text-align: center;
+
+    @include for-phone-only {
+        padding-top: 10px;
+
+        h1 {
+            margin: auto;
+            width: 75%;
+
+            img{
+                width: 70%;
+            }
+
+            a {
+                color: inherit;
+            }
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li button {
+                display: block;
+                position: absolute;
+                top: 30px; 
+                background-repeat:no-repeat;
+                background-color: transparent;
+                background-size: 100%;
+                padding:0;
+                border:none;
+                height:30px;
+                width:30px;
+                filter: invert(1);
+            }
+
+            #menu {
+                left:10px;
+                background-image: url(../icons/svg/menu.svg);
+            }
+
+            #login {
+                right: 10px;
+            } 
+        }
+    }
+}
+

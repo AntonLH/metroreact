@@ -35,14 +35,15 @@ const Trip = (props) => {
             if (error) return <div>Error ${error}  </div>
             
             return (
-                <div className="lineak">
+                <div className="trip">
+                <h1>Metro {data.trips_by_pk.stop_times[0].stop.stop_name}-{data.trips_by_pk.trip_headsign}</h1>
 					<ul>
 						{data.trips_by_pk.stop_times.map(stop_time => {
 							const { arrival_time, stop } = stop_time;
 							const isSelected = stop.stop_id==stop_id;
 							return  (
 								<li className={isSelected ? "selected" : ""} key={stop.stop_id}>
-									<h3>{stop.stop_name} - {arrival_time}</h3>
+									<h3>{stop.stop_name}</h3>
 									<p>{arrival_time}</p>
 								</li>
 							)}

@@ -16,12 +16,18 @@ L.Icon.Default.mergeOptions({
 });
 
 const PARADAS = gql`
-query Stops {
+query Stops($now: time!) {
   stops(where: {location_type: {_eq: 0}}, order_by: {stop_id: asc}) {
     stop_id
     stop_lat
     stop_lon
     stop_name
+    stop_times(limit: 1, where: {arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}) {
+      arrival_time
+      trip {
+        trip_headsign
+      }
+    }
   }
 }`
 
@@ -30,29 +36,17 @@ const Paradas = () => {
 
 
 	const position = [43.320779, -2.985927]
+	let now =  new Date(); 
+	let now_string= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+
     return(
-        <Query query={PARADAS}>
+        <Query query={PARADAS}  variables={{now: now_string}}  >
         {({ loading, error, data }) => {
             if (loading) return <Spinner color="#bf3e2d" />
             if (error) return <div>Error ${error}  </div>
 
 			return (
-				<div className="lineak">
-				<ul>
-				{data.stops.map(stop => {
-					const { stop_id, stop_lat, stop_lon, stop_name} = stop;
-					return  (
-						<li key={stop_id}>
-						<Link
-						to={{
-							pathname: `/parada/${stop_id}`,
-						}}>
-						<h3>{stop_name} - Coordenadas: {stop_lat}, {stop_lon}</h3>
-						</Link>
-						</li>
-					)}
-				)}
-				</ul>
+				<div className="lineas">
 				<div className="map">
 				{(typeof window !== 'undefined') ? (
 					<Map center={position} zoom={11}>
@@ -64,7 +58,6 @@ const Paradas = () => {
 					{data.stops.map(stop => {
 						const { stop_id, stop_lat, stop_lon, stop_name} = stop;
 						let coordinates=[stop_lat, stop_lon];
-						console.log(coordinates)
 						return (
 							<Marker position={coordinates}>
 							<Popup>
@@ -76,6 +69,23 @@ const Paradas = () => {
 					</Map>
 				) : null} 
 				</div>
+				<ul>
+				{data.stops.map(stop => {
+					const { stop_id, stop_lat, stop_lon, stop_name, stop_times} = stop;
+                    const { arrival_time, trip } = stop_times[0];
+					return  (
+						<li key={stop_id}>
+						<Link
+						to={{
+							pathname: `/parada/${stop_id}`,
+						}}>
+						<h3>{stop_name}</h3>
+						</Link>
+                        <p>Próximo metro a las {arrival_time} hacia {trip.trip_headsign}</p>
+						</li>
+					)}
+				)}
+				</ul>
 				</div>
 
 			)

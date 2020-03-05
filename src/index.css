@@ -12,19 +12,11 @@ code {
     monospace;
 }
 
-.lineak {
-	display: flex;
-}
-.lineak ul{
-	width: 50%;
-}
-.lineak ul li.selected{
-	color: #e95e27;
-}
 .map{
-	height: 500px;
-	width:50%;
+    height: 500px;
+    position: fixed;
+    width: 100%;
 }
 .leaflet-container{
-	height: 500px;
+    height: 500px;
 }

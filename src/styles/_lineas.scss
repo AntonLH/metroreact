@@ -1,0 +1,25 @@
+.lineas {
+    display: flex;
+    flex-direction: column;
+    ul{
+        margin-top: 500px;
+        z-index: 10;
+        background-color: #fff;
+        li{
+            list-style: none;
+            margin: 20px 0px;
+            &::before{
+                content: "";
+                width: 23px;
+                height: 15px;
+                margin-right: 10px;
+                display: inline-block;
+                background-image: url("../icons/svg/metrobilbao_logo.svg");
+            }
+
+            h3{
+                display: inline;
+            }
+        }
+    }
+}
