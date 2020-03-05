@@ -11,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.lineak {
+	display: flex;
+}
+.lineak ul{
+	width: 50%;
+}
+.map{
+	height: 500px;
+	width:50%;
+}
+.leaflet-container{
+	height: 500px;
+}
