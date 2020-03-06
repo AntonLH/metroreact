@@ -38,6 +38,7 @@ const Trip = (props) => {
 	const { loading, error, data } = useQuery(SALIDAS, {
 		variables: {id: id},
 	});
+
 	const myRef = useRef(null);
 
 	useEffect(() => {
@@ -47,7 +48,7 @@ const Trip = (props) => {
 	}, [data]);
 
 	if (loading) return <Spinner color="#bf3e2d" />
-		if (error) return <div>Error ${error}  </div>
+    if (error) return <div>Error ${error}  </div>
 
 		return (
 			<div className="trip">
@@ -62,7 +63,6 @@ const Trip = (props) => {
 				return  (
 					<li data-ref={stop.stop_id==stop_id ? "myRef" : null} ref={stop.stop_id==stop_id ? myRef : null} className={stop.stop_id==stop_id ? "selected": isSelected ? "post-selected" : "pre-selected"} key={stop.stop_id}>
 					<h3>{stop.stop_name}</h3>
-					<p>{arrival_time}</p>
 					<p className="diff">{minuteDiff}</p>
 					</li>
 				)}
