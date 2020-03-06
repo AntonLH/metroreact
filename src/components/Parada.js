@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { gql } from "apollo-boost";
 import { Query } from 'react-apollo'
+import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 
 const SALIDAS = gql`
 query NextStops($id: String!, $now: time!) {
@@ -37,19 +38,22 @@ const Salidas = (props) => {
 					<ul>
 						{data.stop_times.map(stop_time => {
 							const { arrival_time, trip, trip_id} = stop_time;
+							const arrival_time_date=stringTimeToDate(arrival_time);
+							const minuteDiff = getMinuteDiff(arrival_time_date, now);
 							return  (
 								<li key={trip_id}>
-									<Link to={{ pathname: `/trip/${trip_id}`, data: {id}}} ><h3>Dirección {trip.trip_headsign}</h3></Link>
-									<p>{arrival_time}</p>
+								<Link to={{ pathname: `/trip/${trip_id}`, data: {id}}} ><h3>Dirección {trip.trip_headsign}</h3></Link>
+								<p>{arrival_time}</p>
+								<p>{minuteDiff}</p>
 								</li>
 							)}
 						)}
-					</ul>
+				</ul>
 				</div>
-            )
-        }}
-    </Query>
-    )
+			)
+		}}
+		</Query>
+	)
 };
 
 export default Salidas;

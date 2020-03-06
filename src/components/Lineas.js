@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
+import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { Query } from 'react-apollo'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
@@ -59,9 +60,9 @@ const Paradas = () => {
 						const { stop_id, stop_lat, stop_lon, stop_name} = stop;
 						let coordinates=[stop_lat, stop_lon];
 						return (
-							<Marker position={coordinates}>
+							<Marker key={stop_id} position={coordinates}>
 							<Popup>
-							<Link to={{ pathname: `/parada/${stop_id}`,}}>{stop_name}</Link>
+							<Link to={{ pathname: `/parada/${stop_id}`}}>{stop_name}</Link>
 							</Popup>
 							</Marker>
 						)
@@ -73,15 +74,14 @@ const Paradas = () => {
 				{data.stops.map(stop => {
 					const { stop_id, stop_lat, stop_lon, stop_name, stop_times} = stop;
                     const { arrival_time, trip } = stop_times[0];
+					const arrival_time_date=stringTimeToDate(arrival_time);
+					const minuteDiff = getMinuteDiff(arrival_time_date, now);
 					return  (
 						<li key={stop_id}>
-						<Link
-						to={{
-							pathname: `/parada/${stop_id}`,
-						}}>
+						<Link to={{ pathname: `/parada/${stop_id}`}}>
 						<h3>{stop_name}</h3>
 						</Link>
-                        <p>Próximo metro a las {arrival_time} hacia {trip.trip_headsign}</p>
+						<p>Próximo metro {minuteDiff} hacia {trip.trip_headsign}</p>
 						</li>
 					)}
 				)}

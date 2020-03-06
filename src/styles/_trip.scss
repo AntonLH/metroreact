@@ -1,8 +1,10 @@
 .trip{
     ul{
         list-style: none;
+		padding: 0;
         li{
-            margin: 20px 0px;
+			padding: 10px 30px;
+			border-bottom: 1px solid #ccc;
             &::before{
                 content: "";
                 width: 23px;
@@ -11,6 +13,11 @@
                 display: inline-block;
                 background-image: url("../icons/svg/metrobilbao_logo.svg");
             }
+			&.pre-selected{
+				background-color: #f2f2f2;
+				opacity: 0.7;
+				color: #353535;
+			}
             &.selected{
                 color: #e95e27;
             }
