@@ -6,8 +6,8 @@ import { Query } from 'react-apollo'
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 
 const SALIDAS = gql`
-query NextStops($id: String!, $now: time!) {
-  stop_times(where: {trip: {service_id: {_eq: "invl_20.pex"}}, stop_id: {_eq: $id}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}, limit: 10) {
+query NextStops($id: String!, $now: time!, $service_id: String!) {
+  stop_times(where: {trip: {service_id: {_eq: $service_id}}, stop_id: {_eq: $id}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}, limit: 10) {
     arrival_time
     trip {
       trip_headsign
@@ -26,7 +26,7 @@ const Salidas = (props) => {
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
     return(
         //<Query query={LINEAK} variables={{id: user.sub, hilabetea:2, urtea:2020}}  >
-        <Query query={SALIDAS} variables={{id: id, now: now_string}}  >
+        <Query query={SALIDAS} variables={{id: id, now: now_string, service_id: "invl_20.pex"}}  >
         {({ loading, error, data }) => {
             if (loading) return <Spinner color="#bf3e2d" />
             if (error) return <div>Error ${error}  </div>

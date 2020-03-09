@@ -17,13 +17,13 @@ L.Icon.Default.mergeOptions({
 });
 
 const PARADAS = gql`
-query Stops($now: time!) {
+query Stops($now: time!, $service_id: String!) {
   stops(where: {location_type: {_eq: 0}}, order_by: {stop_name: asc}) {
     stop_id
     stop_lat
     stop_lon
     stop_name
-    stop_times(limit: 1, where: {arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}) {
+    stop_times(limit: 1, where: {arrival_time: {_gt: $now}, trip: {service_id: {_eq: $service_id}}}, order_by: {arrival_time: asc}) {
       arrival_time
       trip {
         trip_headsign
@@ -59,7 +59,7 @@ const Paradas = () => {
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
 	const { loading, error, data } = useQuery(PARADAS, {
-		variables: {now: now_string},
+		variables: {now: now_string, service_id: "invl_20.pex"},
     });
 
 	const [prefs, setPrefs] =  useStateWithLocalStorage("id");
@@ -90,9 +90,9 @@ const Paradas = () => {
 
 	return (
         <div className="lineas">
+			<Link className="back" to='/'></Link>
 			<div className="map">
-			{(typeof window !== 'undefined') ? (
-				<Map center={position} zoom={13}>
+			<Map center={position} zoom={13}>
 				<TileLayer
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -109,8 +109,7 @@ const Paradas = () => {
 						</Marker>
 					)
 				})}
-				</Map>
-			) : null} 
+			</Map>
 			</div>
 			<ul>
 			{data.stops.map(stop => {
