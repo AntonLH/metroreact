@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { gql } from "apollo-boost";
@@ -22,9 +22,8 @@ query NextStops($id: String!, $now: time!) {
 const Salidas = (props) => {
 
     const id = props.match.params.id;
-	let now =  new Date(); 
-	let now_string= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-	console.log(now_string);
+	const now = useRef(new Date());
+	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
     return(
         //<Query query={LINEAK} variables={{id: user.sub, hilabetea:2, urtea:2020}}  >
         <Query query={SALIDAS} variables={{id: id, now: now_string}}  >
@@ -38,8 +37,7 @@ const Salidas = (props) => {
 					<ul>
 						{data.stop_times.map(stop_time => {
 							const { arrival_time, trip, trip_id} = stop_time;
-							const arrival_time_date=stringTimeToDate(arrival_time);
-							const minuteDiff = getMinuteDiff(arrival_time_date, now);
+							const minuteDiff = getMinuteDiff(stringTimeToDate(arrival_time), now.current);
 							return  (
 								<li key={trip_id}>
 								<Link to={{ pathname: `/trip/${trip_id}`, data: {id}}} ><h3>Dirección {trip.trip_headsign}</h3></Link>

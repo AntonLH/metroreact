@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
@@ -24,8 +24,9 @@ query NextTrips($now: time!, $stops: [String!]) {
 const Home = () => {
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
+	const stops = localStorage.getItem("id") ? localStorage.getItem("id").split(",") : [];
 	const { loading, error, data } = useQuery(PARADAS, {
-		variables: {now: now_string, stops: JSON.parse(localStorage.getItem("id")) },
+		variables: {now: now_string, stops: stops },
     });
 
     if (loading) return <Spinner color="#bf3e2d" />

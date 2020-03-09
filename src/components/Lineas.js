@@ -32,7 +32,6 @@ query Stops($now: time!) {
   }
 }`
 
-
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
     var R = 3958.7558657440545;
     var dLat = (lat2-lat1) * Math.PI/180;
@@ -45,6 +44,16 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
     return d;
 }
 
+const useStateWithLocalStorage = localStorageKey => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(localStorageKey) || ''
+  );
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, value);
+  }, [value]);
+  return [value, setValue];
+};
+
 const Paradas = () => {
     const [position, setPosition] = useState([43.320779, -2.985927]);
 	const now = useRef(new Date());
@@ -53,10 +62,16 @@ const Paradas = () => {
 		variables: {now: now_string},
     });
 
+	const [prefs, setPrefs] =  useStateWithLocalStorage("id");
 	const handleClick = (elem) => {
-		let aux = JSON.parse(localStorage.getItem("id")) || [];
-		aux.push(elem.target.dataset.stop);
-		localStorage.setItem("id", JSON.stringify(aux));
+		const prefs_arr=prefs.split(",");
+			console.log(prefs_arr);
+		if(prefs_arr.indexOf(elem.target.dataset.stop)>0){
+			setPrefs(prefs_arr.filter(pref => pref != elem.target.dataset.stop).join(","));
+		}
+		else{
+			setPrefs(prefs+","+elem.target.dataset.stop);
+		}
 	}
 	useEffect(() => {
         navigator.geolocation.getCurrentPosition((currentPosition) => {
@@ -67,14 +82,13 @@ const Paradas = () => {
     if (loading) return <Spinner color="#bf3e2d" />
     if (error) return <div>Error ${error}  </div>
 
+
 	for (let stop of data.stops) {
 		stop.distance = calculateDistance(position[0], position[1], stop.stop_lat, stop.stop_lon);
 	}
+	data.stops.sort((a, b) => a.distance - b.distance)
 
-	data.stops.sort(function(a, b) { 
-		return a.distance - b.distance;
-	});
-    return (
+	return (
         <div className="lineas">
 			<div className="map">
 			{(typeof window !== 'undefined') ? (
@@ -100,16 +114,15 @@ const Paradas = () => {
 			</div>
 			<ul>
 			{data.stops.map(stop => {
-				const { stop_id, stop_lat, stop_lon, stop_name, stop_times} = stop;
+				const { stop_id, stop_name, stop_times} = stop;
 				const { arrival_time, trip } = stop_times[0];
-				const arrival_time_date=stringTimeToDate(arrival_time);
-				const minuteDiff = getMinuteDiff(arrival_time_date, now.current);
+				const minuteDiff = getMinuteDiff(stringTimeToDate(arrival_time), now.current);
 				return  (
 					<li key={stop_id}>
 					<Link to={{ pathname: `/parada/${stop_id}`}}>
 					<h3>{stop_name}</h3>
 					</Link>
-					<button data-stop={stop_id} onClick={handleClick}>Añadir {stop_name}</button>
+					<button className={(prefs.split(",").indexOf(stop_id)>0) ? "remove" : "add" } data-stop={stop_id} onClick={handleClick}></button>
 					<p>Próximo metro {minuteDiff} hacia {trip.trip_headsign}</p>
 					</li>
 				)}

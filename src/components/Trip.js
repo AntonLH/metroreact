@@ -1,8 +1,7 @@
-import React, {useRef , useEffect} from 'react';
+import React, { useRef , useEffect} from 'react';
 import { Spinner } from './Spinner.js';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-import { Query } from 'react-apollo';
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 
 const SALIDAS = gql`
@@ -30,8 +29,7 @@ const Trip = (props) => {
 	let stop_id = 0
 	if(props.location.data) stop_id=props.location.data.id;
 	console.log(stop_id);
-	let now =  new Date(); 
-	let now_string= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+	const now = useRef(new Date());
 	let isSelected = false;
 
 
@@ -56,12 +54,10 @@ const Trip = (props) => {
 			<ul>
 			{data.trips_by_pk.stop_times.map(stop_time => {
 				const { arrival_time, stop } = stop_time;
-				const arrival_time_date=stringTimeToDate(arrival_time);
-				const minuteDiff = getMinuteDiff(arrival_time_date, now);
-				console.log(isSelected);
+				const minuteDiff = getMinuteDiff(stringTimeToDate(arrival_time), now.current);
 				isSelected = isSelected | stop.stop_id==stop_id;
 				return  (
-					<li data-ref={stop.stop_id==stop_id ? "myRef" : null} ref={stop.stop_id==stop_id ? myRef : null} className={stop.stop_id==stop_id ? "selected": isSelected ? "post-selected" : "pre-selected"} key={stop.stop_id}>
+					<li ref={stop.stop_id==stop_id ? myRef : null} className={stop.stop_id==stop_id ? "selected": isSelected ? "post-selected" : "pre-selected"} key={stop.stop_id}>
 					<h3>{stop.stop_name}</h3>
 					<p className="diff">{minuteDiff}</p>
 					</li>
