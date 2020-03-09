@@ -1,6 +1,7 @@
 import React from "react";
 import Header from './Header.js';
 import Lineas from './Lineas.js';
+import Home from './Home.js';
 import Salidas from './Parada.js';
 import Trip from './Trip.js';
 import { Switch, Route } from 'react-router-dom'
@@ -22,7 +23,8 @@ const App = () => {
             <div className="App">
                 <main>
                 <Switch>
-                  <Route exact path="/" component={Lineas} />
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/lineas" component={Lineas} />
                   <Route exact path="/parada/:id" component={Salidas} />
                   <Route exact path="/trip/:id" component={Trip} />
                 </Switch>
