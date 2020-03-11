@@ -1,8 +1,16 @@
 .lineas {
     display: flex;
     flex-direction: column;
+	.map{
+		height: 65vh;
+		position: fixed;
+		width: 100%;
+	}
+	.leaflet-container{
+		height: 500px;
+	}
     ul{
-        margin-top: 500px;
+        margin-top: 65vh;
         z-index: 10;
         background-color: #fff;
         li{
@@ -43,21 +51,24 @@
 		}
 	}
 
-	.back{
-		z-index: 10;
-		top: 0px;
-		left: 0px;
+	.back {
+		margin-top: 10px;
+		border: 2px solid rgba(0, 0, 0, 0.2);
+		margin-left: 10px;
 		position: fixed;
 		border-radius: 4px;
-		border: 2px solid rgba(0, 0, 0, 0.2);
-		height: 30px;
-		width: 30px;
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
-		background-image: url("../icons/svg/arrow-left.svg");
-		background-color: #fff;
-		margin-top: 10px;
-		margin-left: 10px;
+		z-index: 10;
+
+		a{
+			height: 30px;
+			border-radius: 3px;
+			width: 30px;
+			display: block;
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+			background-image: url(/static/media/arrow-left.bd2fab6d.svg);
+			background-color: #fff;
+		}
 	}
 
 	.leaflet-left{

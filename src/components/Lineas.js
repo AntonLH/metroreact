@@ -90,7 +90,7 @@ const Paradas = () => {
 
 	return (
         <div className="lineas">
-			<Link className="back" to='/'></Link>
+			<div className="back"><Link to='/'></Link></div>
 			<div className="map">
 			<Map center={position} zoom={13}>
 				<TileLayer

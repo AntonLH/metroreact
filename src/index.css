@@ -15,11 +15,3 @@ code {
     monospace;
 }
 
-.map{
-    height: 500px;
-    position: fixed;
-    width: 100%;
-}
-.leaflet-container{
-    height: 500px;
-}
