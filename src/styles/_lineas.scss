@@ -7,7 +7,7 @@
 		width: 100%;
 	}
 	.leaflet-container{
-		height: 500px;
+		height: 65vh;
 	}
     ul{
         margin-top: 65vh;
@@ -66,7 +66,7 @@
 			display: block;
 			background-position: 50% 50%;
 			background-repeat: no-repeat;
-			background-image: url(/static/media/arrow-left.bd2fab6d.svg);
+			background-image: url("../icons/svg/arrow-left.svg");
 			background-color: #fff;
 		}
 	}
