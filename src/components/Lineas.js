@@ -57,8 +57,7 @@ const useStateWithLocalStorage = localStorageKey => {
 
 const Paradas = () => {
     const [position, setPosition] = useState([43.320779, -2.985927]);
-	//const url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
-	const url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png";
+	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
 	const { loading, error, data } = useQuery(PARADAS, {
@@ -95,10 +94,10 @@ const Paradas = () => {
         <div className="lineas">
 			<div className="back"><Link to='/'></Link></div>
 			<div className="map">
-			<Map center={position} zoom={13}>
+			<Map center={position} zoom={13} maxZoom={19}>
 				<TileLayer
 				url={url}
-				attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 				/>
 				{data.stops.map(stop => {
 					const { stop_id, stop_lat, stop_lon, stop_name} = stop;
