@@ -21,6 +21,7 @@ query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
       arrival_time
       trip {
         trip_headsign
+		trip_id
       }
     }
   }
@@ -45,7 +46,7 @@ const Home = () => {
 		variables: {now: now_string, stops: stops, service_id: "invl_20.pex" },
     });
 
-    if (loading) return <Spinner color="#bf3e2d" />
+    if (loading) return <Spinner color="#ff6505" />
     if (error) return <div>Error ${error}  </div>
 
     return (
@@ -65,7 +66,7 @@ const Home = () => {
 						const arrival_time_date=stringTimeToDate(arrival_time);
 						const minuteDiff = getMinuteDiff(arrival_time_date, now.current);
 						return  (
-							<li>{trip.trip_headsign} {minuteDiff}</li>
+							<li key={trip.trip_id}>{trip.trip_headsign} {minuteDiff}</li>
 						)}
 					)}
 					</ul>

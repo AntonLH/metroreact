@@ -20,7 +20,6 @@ query TripByPk($id: String!) {
 }`
 
 const scrollToRef = (ref) => {
-	console.log(ref);
 	window.scrollTo(0, ref.current.offsetTop - 274)   
 }
 const Trip = (props) => {
@@ -28,7 +27,6 @@ const Trip = (props) => {
 	const id = props.match.params.id;
 	let stop_id = 0
 	if(props.location.data) stop_id=props.location.data.id;
-	console.log(stop_id);
 	const now = useRef(new Date());
 	let isSelected = false;
 
@@ -45,7 +43,7 @@ const Trip = (props) => {
 		}
 	}, [data]);
 
-	if (loading) return <Spinner color="#bf3e2d" />
+	if (loading) return <Spinner color="#ff6505" />
     if (error) return <div>Error ${error}  </div>
 
 		return (

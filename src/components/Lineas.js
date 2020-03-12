@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
+import { GeoJSONMetro } from './GeoJSONMetro.js';
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import { GeoJSON, Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 
@@ -56,6 +57,8 @@ const useStateWithLocalStorage = localStorageKey => {
 
 const Paradas = () => {
     const [position, setPosition] = useState([43.320779, -2.985927]);
+	//const url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
+	const url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
 	const { loading, error, data } = useQuery(PARADAS, {
@@ -65,7 +68,6 @@ const Paradas = () => {
 	const [prefs, setPrefs] =  useStateWithLocalStorage("id");
 	const handleClick = (elem) => {
 		const prefs_arr=prefs.split(",");
-			console.log(prefs_arr);
 		if(prefs_arr.indexOf(elem.target.dataset.stop)>0){
 			setPrefs(prefs_arr.filter(pref => pref != elem.target.dataset.stop).join(","));
 		}
@@ -79,7 +81,7 @@ const Paradas = () => {
         });
 	}, [data]);
 
-    if (loading) return <Spinner color="#bf3e2d" />
+    if (loading) return <Spinner color="#ff6505" />
     if (error) return <div>Error ${error}  </div>
 
 
@@ -88,15 +90,15 @@ const Paradas = () => {
 	}
 	data.stops.sort((a, b) => a.distance - b.distance)
 
+	
 	return (
         <div className="lineas">
 			<div className="back"><Link to='/'></Link></div>
 			<div className="map">
 			<Map center={position} zoom={13}>
 				<TileLayer
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-				id="mapbox.grayscale"
+				url={url}
+				attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 				/>
 				{data.stops.map(stop => {
 					const { stop_id, stop_lat, stop_lon, stop_name} = stop;
@@ -109,6 +111,7 @@ const Paradas = () => {
 						</Marker>
 					)
 				})}
+				<GeoJSON key="metro-bilbao-route" data={GeoJSONMetro} style={{color:"#ff6505"}} />
 			</Map>
 			</div>
 			<ul>
