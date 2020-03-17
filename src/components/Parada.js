@@ -25,6 +25,15 @@ query NextStops($id: String!, $parent_id: String!, $now: time!, $service_id: Str
     }
     trip_id
   }
+    stop_times_aggregate(order_by: {departure_time: desc}, limit: 10, where: {stop_id: {_eq: $id}, trip: {service_id: {_eq: $service_id}}}) {
+        nodes {
+            departure_time
+            trip {
+                trip_headsign
+                direction_id
+            }
+        }
+    }
   stops_by_pk(stop_id: $id) {
     stop_name
     stop_lat
@@ -45,10 +54,10 @@ const Salidas = (props) => {
 	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
+    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
 
-	console.log(parent_id)
 	const { loading, error, data } = useQuery(SALIDAS, {
-		variables: {id: id, parent_id: parent_id, now: now_string, service_id: "invl_20.pex"}
+		variables: {id: id, parent_id: parent_id, now: now_string, service_id: service_id}
     });
 
     if (loading) return <Spinner color="#ff6505" />
@@ -56,9 +65,11 @@ const Salidas = (props) => {
 
 	const position=[data.stops_by_pk.stop_lat, data.stops_by_pk.stop_lon] 
 	console.log(data)
+    let last_direction_true=false;
+    let last_direction_false=false;
 	return (
 		<div className="parada">
-			<div className="back"><Link to='/'></Link></div>
+			<div className="back"><Link to='/lineas'></Link></div>
 			<div className="map">
 			<Map center={position} zoom={17} maxZoom={19}>
 				<TileLayer
@@ -78,6 +89,22 @@ const Salidas = (props) => {
 			</div>
 			<div className="content">
 				<h1>{data.stops_by_pk.stop_name}</h1>
+                {data.stop_times_aggregate.nodes.map(stop_time => {
+                    const { departure_time, trip } = stop_time;
+                    if(trip.direction_id && !last_direction_true){
+                        last_direction_true=true;
+                        return  (
+                            <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                        )
+                    }
+                    if(!trip.direction_id && !last_direction_false){
+                        last_direction_false=true;
+                        return  (
+                            <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                        )
+                    }
+                }
+                )}
 				<ul>
 				{data.stop_times.map(stop_time => {
 					const { arrival_time, trip, trip_id} = stop_time;

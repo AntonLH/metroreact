@@ -6,22 +6,25 @@ import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 
 
-const SERVICE = gql`
-query getService($date: numeric!, $weekDay: Boolean!, $friday: Boolean, $saturday: Boolean, $sunday: Boolean) {
-  calendar(where: {end_date: {_gte: $date}, start_date: {_lte: $date}, friday: {_eq: $friday}, monday: {_eq: $weekDay}, saturday: {_eq: $saturday}, sunday: {_eq: $sunday}}) {
-    service_id
-  }
-}`
 const PARADAS = gql`
 query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
   stops(where: {location_type: {_eq: 0}, stop_id: {_in: $stops}}, order_by: {stop_name: asc}) {
     stop_id
     stop_name
-    stop_times(limit: 4, where: {trip: {service_id: {_eq: "invl_20.pex"}}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}) {
+    stop_times(limit: 4, where: {trip: {service_id: {_eq: $service_id}}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}) {
       arrival_time
       trip {
         trip_headsign
 		trip_id
+      }
+    }
+    stop_times_aggregate(order_by: {departure_time: desc}, limit: 10, where: {trip: {service_id: {_eq: $service_id}}}) {
+      nodes {
+          departure_time
+          trip {
+              trip_headsign
+              direction_id
+          }
       }
     }
   }
@@ -30,20 +33,13 @@ query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
 
 const Home = () => {
 	const now = useRef(new Date());
-	/*const today=parseInt(now.current.toISOString().slice(0,10).replace(/-/g,""));
-	const friday=now.current.getDay()==5;
-	const saturday=now.current.getDay()==6;
-	const sunday=now.current.getDay()==0;
-	const weekDay=!friday && !saturday && !sunday;
-
-	const queryResult = useQuery(SERVICE, {
-		variables: {date: today, weekDay: weekDay, friday: friday, saturday: saturday, sunday: sunday },
-    });*/
+    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
+    console.log(service_id);
 
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
 	const stops = localStorage.getItem("id") ? localStorage.getItem("id").split(",") : [];
 	const { loading, error, data } = useQuery(PARADAS, {
-		variables: {now: now_string, stops: stops, service_id: "invl_20.pex" },
+		variables: {now: now_string, stops: stops, service_id: service_id },
     });
 
     if (loading) return <Spinner color="#ff6505" />
@@ -54,7 +50,9 @@ const Home = () => {
 		<h2><Link to='/lineas'>Ir a todas las líneas</Link></h2>
 			<ul>
 			{data.stops.map(stop => {
-				const { stop_id, stop_name, stop_times} = stop;
+				const { stop_id, stop_name, stop_times, stop_times_aggregate} = stop;
+                let last_direction_true=false;
+                let last_direction_false=false;
 				return  (
 					<li key={stop_id}>
 					<Link to={{ pathname: `/parada/${stop_id}`}}>
@@ -70,6 +68,22 @@ const Home = () => {
 						)}
 					)}
 					</ul>
+					{stop_times_aggregate.nodes.map(stop_time => {
+						const { departure_time, trip } = stop_time;
+                        if(trip.direction_id && !last_direction_true){
+                            last_direction_true=true;
+                            return  (
+                                <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                            )
+                        }
+                        if(!trip.direction_id && !last_direction_false){
+                            last_direction_false=true;
+                            return  (
+                                <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                            )
+                        }
+                    }
+                    )}
 					</li>
 				)}
 			)}

@@ -60,8 +60,9 @@ const Paradas = () => {
 	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
+    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
 	const { loading, error, data } = useQuery(PARADAS, {
-		variables: {now: now_string, service_id: "invl_20.pex"},
+		variables: {now: now_string, service_id: service_id},
     });
 
 	const [prefs, setPrefs] =  useStateWithLocalStorage("id");
