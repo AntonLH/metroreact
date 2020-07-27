@@ -22,6 +22,21 @@ query TripByPk($id: String!) {
 const scrollToRef = (ref) => {
 	window.scrollTo(0, ref.current.offsetTop - 274)   
 }
+
+const shareTrip = (data, props) => {
+    console.log(data)
+    console.log(props)
+
+    console.log( "reactmetro.herokuapp.com"+props.location.pathname );
+    if(navigator.share){
+        navigator.share({
+            title: '{{ page.title }}',
+            text: 'Metro de las {{ page.description }}',
+            url: "https://reactmetro.herokuapp.com"+props.location.pathname 
+        }).then(() => console.log('Share complete'))
+          .error((error) => console.error('Could not share at this time', error))
+    }
+}
 const Trip = (props) => {
 
 	const id = props.match.params.id;
@@ -49,6 +64,7 @@ const Trip = (props) => {
 		return (
 			<div className="trip">
 			<h1> Metro {data.trips_by_pk.stop_times[0].stop.stop_name}-{data.trips_by_pk.trip_headsign}</h1>  
+            <button className="share-button svg" onClick={shareTrip(data, props)}></button>
 			<ul>
 			{data.trips_by_pk.stop_times.map(stop_time => {
 				const { arrival_time, stop } = stop_time;

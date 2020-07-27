@@ -33,12 +33,14 @@
 				width: 25px;
 				height: 25px;
 				background: none;
+                padding: 0;
+                transition: background-image 0.5s ease-in-out;
 			}
 			button.add{
-                background-image: url("../icons/svg/plus.svg");
+                background-image: url("../icons/svg/heart-regular.svg");
 			}
 			button.remove{
-                background-image: url("../icons/svg/minus.svg");
+                background-image: url("../icons/svg/heart-solid.svg");
 			}
 			a{
 				text-decoration: none;

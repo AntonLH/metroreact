@@ -16,7 +16,7 @@ export const getMinuteDiff = (time1, time2) => {
 		return minuteDiff==-1 ? "hace "+Math.abs(minuteDiff)+" minuto" : "hace "+Math.abs(minuteDiff)+" minutos"	
 	}
 	else{
-		return minuteDiff==1 ? "en "+minuteDiff+" minuto" : "en "+minuteDiff+" minutos"
+		return minuteDiff==1 ? minuteDiff+" min" : minuteDiff+" mins"
 	}
 }
 

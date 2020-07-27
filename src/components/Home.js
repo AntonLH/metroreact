@@ -4,6 +4,9 @@ import { Spinner } from './Spinner.js';
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/swiper.scss';
 
 
 const PARADAS = gql`
@@ -16,6 +19,7 @@ query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
       trip {
         trip_headsign
 		trip_id
+        direction_id
       }
     }
     stop_times_aggregate(order_by: {departure_time: desc}, limit: 10, where: {trip: {service_id: {_eq: $service_id}}}) {
@@ -47,47 +51,65 @@ const Home = () => {
 
     return (
         <div className="home">
-		<h2><Link to='/lineas'>Ir a todas las líneas</Link></h2>
-			<ul>
+        <div className="card lines">
+		<Link to='/lineas'>
+        <h2>Todas las líneas</h2>
+        </Link>
+        </div>
+        <h2>Mis líneas</h2>
+        <Swiper
+          spaceBetween={50}
+          slidesOffsetBefore={30}
+          slidesPerView={1.4}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
 			{data.stops.map(stop => {
 				const { stop_id, stop_name, stop_times, stop_times_aggregate} = stop;
                 let last_direction_true=false;
                 let last_direction_false=false;
 				return  (
-					<li key={stop_id}>
+                  <SwiperSlide>
+                    <div className="card">
 					<Link to={{ pathname: `/parada/${stop_id}`}}>
+                    <div className="swipe-image-wrapper">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Abando_metro_station.jpg" />
+                    </div>
 					<h3>{stop_name}</h3>
-					</Link>
-					<ul>
+                    <div className="info">
 					{stop_times.map(stop_time => {
 						const { arrival_time, trip } = stop_time;
 						const arrival_time_date=stringTimeToDate(arrival_time);
 						const minuteDiff = getMinuteDiff(arrival_time_date, now.current);
 						return  (
-							<li key={trip.trip_id}>{trip.trip_headsign} {minuteDiff}</li>
+							<p className={trip.direction_id ? "icon-wrapper departure" : "icon-wrapper arrival"}>{minuteDiff} · {trip.trip_headsign} </p>
 						)}
 					)}
-					</ul>
+                    <p>Últimos metros</p>
 					{stop_times_aggregate.nodes.map(stop_time => {
 						const { departure_time, trip } = stop_time;
+                        //direction_id is a boolean indicating the direction, true=east/false=west
                         if(trip.direction_id && !last_direction_true){
                             last_direction_true=true;
                             return  (
-                                <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                                <p className="icon-wrapper last">{trip.trip_headsign} · {departure_time}</p>
                             )
                         }
                         if(!trip.direction_id && !last_direction_false){
                             last_direction_false=true;
                             return  (
-                                <p>Último metro hacia {trip.trip_headsign} a las: {departure_time}</p>
+                                <p className="icon-wrapper last">{trip.trip_headsign} · {departure_time}</p>
                             )
                         }
                     }
                     )}
-					</li>
+                    </div>
+					</Link>
+                    </div>
+					</SwiperSlide>
 				)}
 			)}
-			</ul>
+            </Swiper>
         </div>
 
     )
