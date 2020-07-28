@@ -25,9 +25,49 @@
             overflow: hidden;
             border-top-left-radius: 16px;
             border-top-right-radius: 16px; 
+            position: relative;
+            height: 150px;
 
             img{
-                width: 100%
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                transform: translate(-50%, -50%);               
+            }
+        }
+        .like-button-wrapper{
+            position: absolute;
+            top: 20px;
+            right: 20px; 
+            background-color: white;
+            border-radius: 100%;
+            height: 25px;
+            width: 25px;
+            z-index: 2;
+            button{
+                background: none;
+                background-image: none;
+                border: none;
+                width: 25px;
+                height: 25px;
+                transition: background-image 0.5s ease-in-out;
+                position: absolute;
+                padding: 5px;
+
+                span{
+                    width: 15px;
+                    height: 15px;
+                    display: block;
+                }
+
+            }
+            button.add span{
+                background-image: url("../icons/svg/heart-regular.svg");
+            }
+            button.remove span{
+                background-image: url("../icons/svg/heart-solid.svg");
             }
         }
         h3{
@@ -41,9 +81,25 @@
             border-radius: 4px;
             padding: 4px 8px;
             text-transform: uppercase; 
+            z-index: 2;
+        } 
+        .distance{
+            margin: 0;
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            background-color: #fff;
+            color: #000;
+            font-size: 12px;
+            border-radius: 4px;
+            padding: 4px 8px;
+            z-index: 2;
         } 
         .info{
             padding: 10px;
+            background-color: white;
+            border-bottom-right-radius: 16px;
+            border-bottom-left-radius: 16px;        
         }
         .icon-wrapper {
             margin: 0;
@@ -66,6 +122,11 @@
         .last::before{
             background-image: url(https://image.flaticon.com/icons/svg/107/107753.svg);
         }
+    }
+    .add-lines{
+        height: 350px;
+        text-align: center;
+
     }
     > ul{
         list-style: none;
