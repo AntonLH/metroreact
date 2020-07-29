@@ -82,6 +82,7 @@
             padding: 4px 8px;
             text-transform: uppercase; 
             z-index: 2;
+            min-width: 60px;
         } 
         .distance{
             margin: 0;
@@ -94,6 +95,7 @@
             border-radius: 4px;
             padding: 4px 8px;
             z-index: 2;
+            min-width: 50px;
         } 
         .info{
             padding: 10px;
@@ -122,11 +124,15 @@
         .last::before{
             background-image: url(https://image.flaticon.com/icons/svg/107/107753.svg);
         }
-    }
-    .add-lines{
-        height: 350px;
-        text-align: center;
+        &.add-lines{
+            height: 350px;
+            text-align: center;
 
+        }
+    }
+
+    .search{
+        display: none;
     }
     > ul{
         list-style: none;
