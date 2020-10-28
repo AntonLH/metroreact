@@ -2,12 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { CardSwiper } from './CardSwiper.js';
+import { Buscador } from './Buscador.js';
 import { useStateWithLocalStorage, distanceString, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
-import DateFnsUtils from '@date-io/date-fns';
 
 import 'swiper/swiper.scss';
 
@@ -58,8 +57,6 @@ query Stops($now: time!, $service_id: String!) {
 }`
 
 const Home = () => {
-    const [position, setPosition] = useState([43.320779, -2.985927]);
-    const [selectedDate, handleDateChange] = useState(new Date());
 	const now = useRef(new Date());
     let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
     console.log(service_id);
@@ -73,6 +70,7 @@ const Home = () => {
 		variables: {now: now_string, stops: stops, service_id: service_id },
     });
 
+    console.log(dataAll)
     return (
         <div className="home">
         <div className="card lines">
@@ -81,17 +79,7 @@ const Home = () => {
         </Link>
         </div>
         <CardSwiper data={data} error={error} loading={loading} now={now} title="Mis líneas" classname="mylines" showDistance={false} lastTrips={true} showAddButton={true} sliceNum={0} />
-        <div className="search">
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <TimePicker
-                clearable
-                ampm={false}
-                label="Hora salida"
-                value={selectedDate}
-                onChange={handleDateChange}
-            />
-       </MuiPickersUtilsProvider>
-        </div>
+        <Buscador data={dataAll} error={errorAll} loading={loadingAll} />
         <CardSwiper data={dataAll} error={errorAll} loading={loadingAll} now={now} title="Líneas cercanas" classname="near-lineas" showDistance={true} lastTrips={false} showAddButton={false} sliceNum={6} />
         </div>
 

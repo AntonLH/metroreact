@@ -37,8 +37,9 @@ export const CardSwiper = (props) => {
         }
         data.stops.sort((a, b) => a.distance - b.distance)
     }
+    let slicedStops=data.stops;
     if(sliceNum>0){
-        data.stops=data.stops.slice(0,sliceNum);
+        slicedStops=data.stops.slice(0,sliceNum);
     }
 
     return (
@@ -51,7 +52,7 @@ export const CardSwiper = (props) => {
           slidesOffsetAfter={30}
           slidesPerView={1.4}
         >
-			{data.stops.map(stop => {
+			{slicedStops.map(stop => {
 				const { stop_id, stop_name, stop_times, stop_times_aggregate, image, distance} = stop;
                 let last_direction_true=false;
                 let last_direction_false=false;
