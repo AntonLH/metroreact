@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import Lineas from './Lineas.js';
+import Busqueda from './Busqueda.js';
 import Home from './Home.js';
 import Salidas from './Parada.js';
 import Trip from './Trip.js';
@@ -42,6 +43,7 @@ const Wrapper = () => {
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <Route exact path="/lineas" component={Lineas} />
+                  <Route exact path="/busqueda" component={Busqueda} />
                   <Route exact path="/parada/:id" component={Salidas} />
                   <Route exact path="/trip/:id" component={Trip} />
                 </Switch>

@@ -9,9 +9,11 @@
 	.leaflet-container{
 		height: 35vh;
 	}
-    .content{
+    .map + .content{
         margin-top: 35vh;
         z-index: 10;
+    }
+    .content{
         background-color: #fff;
         li{
             list-style: none;

@@ -9,8 +9,19 @@ import Select from 'react-select';
 
 
 export const Buscador = (props) => {
-    const [selectedDate, handleDateChange] = useState(new Date());
-	const { loading, error, data } = props;
+	const { loading, error, data, selectedFromId, selectedToId, selectedDateProps } = props;
+    const [selectedDate, handleDateChange] = useState(selectedDateProps ? selectedDateProps : new Date());
+    const [selectedFromStop, setSelectedFromStop] = useState(selectedFromId);
+    const [selectedToStop, setSelectedToStop] = useState(selectedToId);
+ 
+    const handleToChange = e => {
+        setSelectedToStop(e.value);
+    }
+    const handleFromChange = e => {
+        setSelectedFromStop(e.value);
+    }
+    console.log("aaaa"+selectedDate)
+    console.log("aaaa"+selectedDateProps)
 
     if (loading) return <Skeleton />
     if (error) return <div>Error ${error}  </div>
@@ -34,9 +45,16 @@ export const Buscador = (props) => {
                 />
             </MuiPickersUtilsProvider>
             <label>Desde</label>
-            <Select options={selectStops} />
+            <Select options={selectStops} 
+                    value={selectStops.find(obj => obj.value === selectedFromStop)}
+                    onChange={handleFromChange} />
             <label>Hasta</label>
-            <Select options={selectStops} />
+            <Select options={selectStops} 
+                    value={selectStops.find(obj => obj.value === selectedToStop)}
+                    onChange={handleToChange} />
+            <Link to={{ pathname: '/busqueda', state: { fromId: selectedFromStop, toId: selectedToStop, date: selectedDate}}}>
+            <h3>Buscar</h3>
+            </Link>
         </div>
     ) 
 };
