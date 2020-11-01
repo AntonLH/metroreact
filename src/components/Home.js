@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom'
-import { Spinner } from './Spinner.js';
 import { CardSwiper } from './CardSwiper.js';
 import { Buscador } from './Buscador.js';
-import { useStateWithLocalStorage, distanceString, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { getServiceId } from './Utils.js';
 
 import 'swiper/swiper.scss';
 
@@ -58,7 +56,7 @@ query Stops($now: time!, $service_id: String!) {
 
 const Home = () => {
 	const now = useRef(new Date());
-    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
+    let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
     console.log(service_id);
 
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
@@ -70,7 +68,6 @@ const Home = () => {
 		variables: {now: now_string, stops: stops, service_id: service_id },
     });
 
-    console.log(dataAll)
     return (
         <div className="home">
         <div className="card lines">

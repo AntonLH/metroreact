@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { Spinner } from './Spinner.js';
 import { GeoJSONMetro } from './GeoJSONMetro.js';
-import { useStateWithLocalStorage, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
+import { getServiceId, useStateWithLocalStorage, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { GeoJSON, Map, Marker, Popup, TileLayer } from 'react-leaflet'
@@ -41,7 +41,7 @@ const Paradas = () => {
 	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
-    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
+    let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
 	const { loading, error, data } = useQuery(PARADAS, {
 		variables: {now: now_string, service_id: service_id},
     });
@@ -102,7 +102,7 @@ const Paradas = () => {
 				const minuteDiff = getMinuteDiff(stringTimeToDate(arrival_time), now.current);
 				return  (
 					<li key={stop_id}>
-					<Link to={{ pathname: `/parada/${stop_id}`}}>
+					<Link to={{ pathname: `/parada/${stop_id}`, state: { backURL: "/lineas"}}}>
 					<h3>{stop_name}</h3>
 					</Link>
 					<button className={(prefs.split(",").indexOf(stop_id)>0) ? "remove" : "add" } data-stop={stop_id} onClick={handleClick}></button>

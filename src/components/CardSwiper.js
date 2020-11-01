@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
-import { Spinner } from './Spinner.js';
 import { SkeletonSwiper } from './SkeletonSwiper.js';
 import { useStateWithLocalStorage, distanceString, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -30,16 +29,18 @@ export const CardSwiper = (props) => {
 
     if (loading) return <SkeletonSwiper title={title} classname={classname} lastTrips={lastTrips} showDistance={showDistance} />
     if (error) return <div>Error ${error}  </div>
-
+    const sortedData = JSON.parse(JSON.stringify(data));
+    let sortedStops=sortedData.stops;
     if(showDistance){
-        for (let stop of data.stops) {
+
+        for (let stop of sortedStops) {
             stop.distance = calculateDistance(position[0], position[1], stop.stop_lat, stop.stop_lon);
         }
-        data.stops.sort((a, b) => a.distance - b.distance)
+        sortedStops.sort((a, b) => a.distance - b.distance)
+        console.log(data.stops)
     }
-    let slicedStops=data.stops;
     if(sliceNum>0){
-        slicedStops=data.stops.slice(0,sliceNum);
+        sortedStops.slice(0,sliceNum);
     }
 
     return (
@@ -52,7 +53,7 @@ export const CardSwiper = (props) => {
           slidesOffsetAfter={30}
           slidesPerView={1.4}
         >
-			{slicedStops.map(stop => {
+			{sortedStops.map(stop => {
 				const { stop_id, stop_name, stop_times, stop_times_aggregate, image, distance} = stop;
                 let last_direction_true=false;
                 let last_direction_false=false;
@@ -62,7 +63,7 @@ export const CardSwiper = (props) => {
                     <div className="like-button-wrapper">
                     <button className={(prefs.split(",").indexOf(stop_id)>0) ? "remove" : "add" } data-stop={stop_id} onClick={handleClick}><span data-stop={stop_id}></span></button>
                     </div>
-					<Link to={{ pathname: `/parada/${stop_id}`}}>
+					<Link to={{ pathname: `/parada/${stop_id}`, state: { backURL: "/"}}}>
                     <div className="swipe-image-wrapper">
 					<h3>{stop_name}</h3>
                     { showDistance &&

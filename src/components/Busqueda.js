@@ -5,16 +5,7 @@ import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { Buscador } from './Buscador.js';
 import { Trips } from './Trips.js';
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css';
-
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-});
+import { getServiceId } from './Utils.js';
 
 const SALIDAS = gql`
 query NextStops($id: String!, $now: time!, $service_id: String!) {
@@ -60,23 +51,22 @@ query Stops($now: time!, $service_id: String!) {
   }
 }`
 
-const Salidas = (props) => {
+const Busqueda = (props) => {
 
-    console.log(props);
-    const { fromId, toId, date } = props.location.state ;
+    const { fromId, date } = props.location.state;
 	const now = useRef(new Date());
 	let now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
     if(date!==undefined){
-        console.log(date);
         now_string=date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
     }
-    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
+    let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
 
 	const  { data: dataAll, error: errorAll, loading: loadingAll } = useQuery(ALLPARADAS, {
 		variables: {now: now_string, service_id: service_id },
     });
 	const { loading, error, data } = useQuery(SALIDAS, {
-		variables: {id: fromId, now: now_string, service_id: service_id}
+		variables: {id: fromId, now: now_string, service_id: service_id}, 
+        skip: fromId==undefined
     });
 
     if (loading) return <Spinner color="#ff6505" />
@@ -85,11 +75,20 @@ const Salidas = (props) => {
     let last_direction_true=false;
     let last_direction_false=false;
 	return (
-		<div className="parada">
-			<div className="back"><Link to='/home'></Link></div>
-            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} selectedToId={toId} />
+		<div className="busqueda">
+
+			<div className="header">
+                <div className="back"><Link to='/'></Link></div>
+                { data ? (
+                <h1>{data.stops_by_pk.stop_name}</h1>
+                ) : (
+                <h1>Búsqueda</h1>
+                )
+                }
+            </div>
+            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
+            { data &&
 			<div className="content">
-				<h1>{data.stops_by_pk.stop_name}</h1>
                 {data.stop_times_aggregate.nodes.map(stop_time => {
                     const { departure_time, trip } = stop_time;
                     if(trip.direction_id && !last_direction_true){
@@ -106,11 +105,12 @@ const Salidas = (props) => {
                     }
                 }
                 )}
-                <Trips data={data} error={error} loading={loading} id={fromId} now={now}/>
+                <Trips data={data} error={error} loading={loading} id={fromId} now={now} showMinutes={false}/>
 			</div>
+            }
 		</div>
 	)
 };
 
-export default Salidas;
+export default Busqueda;
 

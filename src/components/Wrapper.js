@@ -24,7 +24,6 @@ const Wrapper = () => {
 	const saturday=now.current.getDay()==6;
 	const sunday=now.current.getDay()==0;
 	const weekDay=!friday && !saturday && !sunday;
-    console.log(today);
 
     const { loading, error, data } = useQuery(SERVICE, {
 		variables: {date: today, weekDay: weekDay, friday: friday, saturday: saturday, sunday: sunday },
@@ -34,7 +33,6 @@ const Wrapper = () => {
     if (error) return <div>Error ${error}  </div>
 
     let service_id=data.calendar[0].service_id;
-    console.log(service_id)
     sessionStorage.setItem("service_id", service_id);
 
     return (

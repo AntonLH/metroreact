@@ -5,6 +5,7 @@ import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { Trips } from './Trips.js';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import { getServiceId } from './Utils.js';
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 
@@ -47,14 +48,15 @@ query NextStops($id: String!, $parent_id: String!, $now: time!, $service_id: Str
   }
 }`
 
-const Salidas = (props) => {
+const Parada = (props) => {
 
     const id = props.match.params.id;
+    const { backURL } = props.location.state;
     const parent_id = id.substr(0,id.indexOf("."));
 	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
-    let service_id=sessionStorage.getItem("service_id")==undefined ? "invl_20.pex" : sessionStorage.getItem("service_id");
+    let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
 
 	const { loading, error, data } = useQuery(SALIDAS, {
 		variables: {id: id, parent_id: parent_id, now: now_string, service_id: service_id}
@@ -69,7 +71,7 @@ const Salidas = (props) => {
     let last_direction_false=false;
 	return (
 		<div className="parada">
-			<div className="back"><Link to='/lineas'></Link></div>
+			<div className="back"><Link to={backURL}></Link></div>
 			<div className="map">
 			<Map center={position} zoom={17} maxZoom={19}>
 				<TileLayer
@@ -105,10 +107,10 @@ const Salidas = (props) => {
                     }
                 }
                 )}
-                <Trips data={data} error={error} loading={loading} id={id} now={now}/>
+                <Trips data={data} error={error} loading={loading} id={id} now={now} showMinutes={true}/>
 			</div>
 		</div>
 	)
 };
 
-export default Salidas;
+export default Parada;
