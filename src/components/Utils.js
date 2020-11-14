@@ -55,10 +55,11 @@ export const useStateWithLocalStorage = localStorageKey => {
 };
  
 export const getServiceId = date => {
-    switch (date.current.getDay()) {
+    let current=date.current ? date.current : date;
+    switch (current.getDay()) {
         case 0: return "invd_20.pex";
         case 5: return "invv_20.pex";
         case 6: return "invs_20.pex";
-        default: return "invv_20.pex";
+        default: return "invl_20.pex";
     }
 };

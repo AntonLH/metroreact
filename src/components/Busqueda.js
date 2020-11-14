@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { Buscador } from './Buscador.js';
 import { Trips } from './Trips.js';
 import { getServiceId } from './Utils.js';
+import { format } from "date-fns";
 
 const SALIDAS = gql`
 query NextStops($id: String!, $now: time!, $service_id: String!) {
@@ -33,21 +34,10 @@ query NextStops($id: String!, $now: time!, $service_id: String!) {
 }`
 
 const ALLPARADAS = gql`
-query Stops($now: time!, $service_id: String!) {
+query Stops {
   stops(where: {location_type: {_eq: 0}}, order_by: {stop_name: asc}) {
     stop_id
-    stop_lat
-    stop_lon
     stop_name
-    image
-    stop_times(limit: 2, where: {arrival_time: {_gt: $now}, trip: {service_id: {_eq: $service_id}}}, order_by: {arrival_time: asc}) {
-      arrival_time
-      trip {
-        trip_headsign
-		trip_id
-        direction_id
-      }
-    }
   }
 }`
 
@@ -55,15 +45,14 @@ const Busqueda = (props) => {
 
     const { fromId, date } = props.location.state;
 	const now = useRef(new Date());
-	let now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
-    if(date!==undefined){
-        now_string=date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-    }
+	let now_string= format(now.current, "hh:mm:ss")
     let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
+    if(date!==undefined){
+        now_string= format(date, "hh:mm:ss")
+        service_id=getServiceId(date);
+    }
 
-	const  { data: dataAll, error: errorAll, loading: loadingAll } = useQuery(ALLPARADAS, {
-		variables: {now: now_string, service_id: service_id },
-    });
+	const  { data: dataAll, error: errorAll, loading: loadingAll } = useQuery(ALLPARADAS);
 	const { loading, error, data } = useQuery(SALIDAS, {
 		variables: {id: fromId, now: now_string, service_id: service_id}, 
         skip: fromId==undefined
@@ -89,6 +78,7 @@ const Busqueda = (props) => {
             <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
             { data &&
 			<div className="content">
+                <h2>{format(date, "dd/MM/yyyy hh:mm")}</h2>
                 {data.stop_times_aggregate.nodes.map(stop_time => {
                     const { departure_time, trip } = stop_time;
                     if(trip.direction_id && !last_direction_true){
@@ -105,7 +95,7 @@ const Busqueda = (props) => {
                     }
                 }
                 )}
-                <Trips data={data} error={error} loading={loading} id={fromId} now={now} showMinutes={false}/>
+                <Trips data={data} error={error} loading={loading} id={fromId} stop_name={data.stops_by_pk.stop_name} now={now} showMinutes={false}/>
 			</div>
             }
 		</div>

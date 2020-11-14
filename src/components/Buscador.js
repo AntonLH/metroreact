@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import Skeleton from 'react-loading-skeleton';
-import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
+import { es } from "date-fns/locale";
+import { MuiPickersUtilsProvider, DatePicker, TimePicker } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import Select from 'react-select';
 
@@ -24,6 +25,12 @@ export const Buscador = (props) => {
                 <Skeleton height={40} />
             </div>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <div className="flex">
+                <DatePicker
+                    value={selectedDate} 
+                    format="dd/MM/yyyy"
+                    label="Día salida"
+                    onChange={handleDateChange} />
                 <TimePicker
                     clearable
                     ampm={false}
@@ -31,6 +38,7 @@ export const Buscador = (props) => {
                     value={selectedDate}
                     onChange={handleDateChange}
                 />
+                </div>
             </MuiPickersUtilsProvider>
             <Link className="search-button" to={{ pathname: '/busqueda', state: { fromId: selectedFromStop,  date: selectedDate}}}>
             Buscar
@@ -61,7 +69,13 @@ export const Buscador = (props) => {
                         value={selectStops.find(obj => obj.value === selectedFromStop)}
                         onChange={handleFromChange} />
             </div>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
+                <div className="flex">
+                <DatePicker
+                    value={selectedDate} 
+                    format="dd/MM/yyyy"
+                    label="Día salida"
+                    onChange={handleDateChange} />
                 <TimePicker
                     clearable
                     ampm={false}
@@ -69,6 +83,7 @@ export const Buscador = (props) => {
                     value={selectedDate}
                     onChange={handleDateChange}
                 />
+                </div>
             </MuiPickersUtilsProvider>
             <Link className="search-button" to={{ pathname: '/busqueda', state: { fromId: selectedFromStop,  date: selectedDate}}}>
             Buscar

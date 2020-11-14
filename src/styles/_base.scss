@@ -158,6 +158,9 @@ body {
     .card .info{
         padding: 15px;
     }
+    .flex .MuiFormControl-root{
+        padding: 2px;
+    }
     .search-from{
         margin: 10px 0px;
     }
@@ -173,4 +176,8 @@ body {
         margin-top: 10px;
         border-radius: 16px;
     }
+}
+
+.flex{
+    display: flex;
 }
