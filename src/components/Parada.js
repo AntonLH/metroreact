@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom'
-import { Spinner } from './Spinner.js';
+import Skeleton from 'react-loading-skeleton';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { Trips } from './Trips.js';
@@ -62,7 +62,26 @@ const Parada = (props) => {
 		variables: {id: id, parent_id: parent_id, now: now_string, service_id: service_id}
     });
 
-    if (loading) return <Spinner color="#ff6505" />
+    if (loading) return (
+		<div className="parada">
+			<div className="back"><Link to={backURL}></Link></div>
+			<div className="map">
+			<Map zoom={17} maxZoom={19}>
+				<TileLayer
+				url={url}
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+				/>
+				
+			</Map>
+			</div>
+			<div className="content">
+				<h1><Skeleton width={150} /></h1>
+                <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
+                <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
+                <Trips data={data} error={error} loading={loading} id={id} now={now.current} showMinutes={true}/>
+			</div>
+		</div>
+    )
 	if (error) return <div>Error ${error}  </div>
 
 	const position=[data.stops_by_pk.stop_lat, data.stops_by_pk.stop_lon] 

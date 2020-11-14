@@ -1,5 +1,5 @@
 import React, { useRef , useEffect} from 'react';
-import { Spinner } from './Spinner.js';
+import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { stringTimeToDate, getMinuteDiff } from './Utils.js';
@@ -58,7 +58,24 @@ const Trip = (props) => {
 		}
 	}, [data]);
 
-	if (loading) return <Spinner color="#ff6505" />
+	if (loading) return (
+			<div className="trip">
+			<h1> Metro <Skeleton width={350} /></h1>  
+            {(navigator.share && props.location.state) &&
+                <button className="share-button svg" onClick={() => shareTrip(data, props)}></button>
+            }
+			<ul>
+                {[...Array(10)].map(i => {
+                return(
+                    <li>
+                        <h3><Skeleton width={150} /></h3>
+                        <p className="diff"><Skeleton width={150} /></p>
+                    </li>
+                )}
+                )}
+			</ul>
+			</div>
+    ) 
     if (error) return <div>Error ${error}  </div>
 
 		return (

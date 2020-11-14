@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom'
-import { Spinner } from './Spinner.js';
+import Skeleton from 'react-loading-skeleton';
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 import { Buscador } from './Buscador.js';
@@ -59,7 +59,24 @@ const Busqueda = (props) => {
         skip: fromId==undefined
     });
 
-    if (loading) return <Spinner color="#ff6505" />
+    if (loading) return (
+		<div className="busqueda">
+
+			<div className="header">
+                <div className="back"><Link to='/'></Link></div>
+                <h1><Skeleton width={150} /></h1>
+            </div>
+            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
+			<div className="content">
+                <h2>{format(date, "dd/MM/yyyy HH:mm")}</h2>
+                <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
+                <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
+                <Trips data={data} error={error} loading={loading} id={fromId} now={date ? date : now.current} showMinutes={false}/>
+			</div>
+            }
+		</div>
+
+    )
 	if (error) return <div>Error ${error}  </div>
 
     let last_direction_true=false;

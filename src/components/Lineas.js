@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom'
-import { Spinner } from './Spinner.js';
+import Skeleton from 'react-loading-skeleton';
 import { GeoJSONMetro } from './GeoJSONMetro.js';
 import { getServiceId, useStateWithLocalStorage, calculateDistance, stringTimeToDate, getMinuteDiff } from './Utils.js';
 import { gql } from "apollo-boost";
@@ -62,7 +62,32 @@ const Paradas = () => {
         });
 	}, [data]);
 
-    if (loading) return <Spinner color="#ff6505" />
+    if (loading) return (
+
+        <div className="lineas">
+			<div className="back"><Link to='/'></Link></div>
+			<div className="map">
+			<Map center={position} zoom={13} maxZoom={19}>
+				<TileLayer
+				url={url}
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+				/>
+				<GeoJSON key="metro-bilbao-route" data={GeoJSONMetro} style={{color:"#ff6505"}} />
+			</Map>
+			</div>
+			<ul>
+                {[...Array(10)].map(() => {
+                return(
+                <li>
+                    <a><h3><Skeleton width={150} /></h3></a>         
+					<button><Skeleton className="pull-left" circle={true} height={20} width={20} /></button>
+                    <p><Skeleton width={250} /></p>
+                </li>
+                )}
+                )}
+			</ul>
+        </div>
+    )
     if (error) return <div>Error ${error}  </div>
 
 

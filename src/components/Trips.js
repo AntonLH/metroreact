@@ -7,7 +7,18 @@ import { stringTimeToDate, getMinuteDiff } from './Utils.js';
 export const Trips = (props) => {
 	const { loading, error, data, now, stop_name, id, showMinutes} = props;
 
-    if (loading) return <Skeleton />
+    if (loading) return (
+			<ul>
+                {[...Array(10)].map(() => {
+                return(
+                <li>
+                    <a><h3><Skeleton width={150} /></h3></a>         
+                    <p><Skeleton width={250} /></p>
+                </li>
+                )}
+                )}
+			</ul>
+    )
     if (error) return <div>Error ${error}  </div>
 
     return (
