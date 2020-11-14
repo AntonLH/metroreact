@@ -107,7 +107,7 @@ const Parada = (props) => {
                     }
                 }
                 )}
-                <Trips data={data} error={error} loading={loading} id={id} now={now} showMinutes={true}/>
+                <Trips data={data} error={error} loading={loading} id={id} now={now.current} showMinutes={true}/>
 			</div>
 		</div>
 	)

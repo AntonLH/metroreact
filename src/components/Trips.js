@@ -19,7 +19,7 @@ export const Trips = (props) => {
                 <Link to={{ pathname: `/trip/${trip_id}`, data: {id}, state: { date: now, stop_name: stop_name, showMinutes: showMinutes}}} ><h3>Dirección {trip.trip_headsign}</h3></Link>
                 <p>{arrival_time}</p>
                 { showMinutes && 
-                <p>{getMinuteDiff(stringTimeToDate(arrival_time), now.current)}</p>
+                <p>{getMinuteDiff(stringTimeToDate(arrival_time), now)}</p>
                 }
                 </li>
             )}

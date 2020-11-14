@@ -45,10 +45,11 @@ const Busqueda = (props) => {
 
     const { fromId, date } = props.location.state;
 	const now = useRef(new Date());
-	let now_string= format(now.current, "hh:mm:ss")
+	let now_string= format(now.current, "HH:mm:ss")
     let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
     if(date!==undefined){
-        now_string= format(date, "hh:mm:ss")
+    console.log(date);
+        now_string= format(date, "HH:mm:ss")
         service_id=getServiceId(date);
     }
 
@@ -78,7 +79,7 @@ const Busqueda = (props) => {
             <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
             { data &&
 			<div className="content">
-                <h2>{format(date, "dd/MM/yyyy hh:mm")}</h2>
+                <h2>{format(date, "dd/MM/yyyy HH:mm")}</h2>
                 {data.stop_times_aggregate.nodes.map(stop_time => {
                     const { departure_time, trip } = stop_time;
                     if(trip.direction_id && !last_direction_true){
@@ -95,7 +96,7 @@ const Busqueda = (props) => {
                     }
                 }
                 )}
-                <Trips data={data} error={error} loading={loading} id={fromId} stop_name={data.stops_by_pk.stop_name} now={now} showMinutes={false}/>
+                <Trips data={data} error={error} loading={loading} id={fromId} stop_name={data.stops_by_pk.stop_name} now={date ? date : now.current} showMinutes={false}/>
 			</div>
             }
 		</div>

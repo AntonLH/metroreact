@@ -31,7 +31,7 @@ const shareTrip = (data, props) => {
     const { date, stop_name } = props.location.state;
     console.log( "reactmetro.herokuapp.com"+props.location.pathname );
     navigator.share({
-        title: "Metro del"+ format(date, "dd/MM/yyyy hh:mm"), 
+        title: "Metro del"+ format(date, "dd/MM/yyyy HH:mm"), 
         text: stop_name + " Dirección " + data.trips_by_pk.trip_headsign,
         url: "https://reactmetro.herokuapp.com"+props.location.pathname 
     }).then(() => console.log('Share complete'))
