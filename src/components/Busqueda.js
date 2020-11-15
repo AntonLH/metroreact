@@ -28,8 +28,6 @@ query NextStops($id: String!, $now: time!, $service_id: String!) {
     }
   stops_by_pk(stop_id: $id) {
     stop_name
-    stop_lat
-    stop_lon
   }
 }`
 
@@ -64,7 +62,6 @@ const Busqueda = (props) => {
 
 			<div className="header">
                 <div className="back"><Link to='/'></Link></div>
-                <h1><Skeleton width={150} /></h1>
             </div>
             <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
 			<div className="content">

@@ -98,9 +98,9 @@ export const Buscador = (props) => {
                           ...theme,
                           colors: {
                             ...theme.colors,
-                            primary25: "#fc8e6c",
-                            primary50: "#fc5e2e",
-                            primary75: "#fc754c",
+                            primary25: "#faeae8",
+                            primary50: "#fdcdbf",
+                            primary75: "#fdae96",
                             primary: "#f1582a",
                           },
                         })}
@@ -114,11 +114,14 @@ export const Buscador = (props) => {
                     value={selectedDate} 
                     format="dd/MM/yyyy"
                     label="Día salida"
+                    okLabel="Aceptar"
+                    cancelLabel="Cancelar"
                     onChange={handleDateChange} />
                 <TimePicker
-                    clearable
                     ampm={false}
                     label="Hora salida"
+                    okLabel="Aceptar"
+                    cancelLabel="Cancelar"
                     value={selectedDate}
                     onChange={handleDateChange}
                 />
