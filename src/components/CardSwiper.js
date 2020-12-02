@@ -40,8 +40,10 @@ export const CardSwiper = (props) => {
         console.log(data.stops)
     }
     if(sliceNum>0){
-        sortedStops.slice(0,sliceNum);
+        sortedStops=sortedStops.slice(0,sliceNum);
     }
+
+	const slidesPerView=window.innerWidth/320;
 
     return (
         <div>
@@ -51,7 +53,7 @@ export const CardSwiper = (props) => {
           spaceBetween={50}
           slidesOffsetBefore={30}
           slidesOffsetAfter={30}
-          slidesPerView={1.4}
+          slidesPerView={slidesPerView}
         >
 			{sortedStops.map(stop => {
 				const { stop_id, stop_name, stop_times, stop_times_aggregate, image, distance} = stop;
@@ -109,7 +111,7 @@ export const CardSwiper = (props) => {
             { showAddButton && 
             <SwiperSlide>
             <div className="card add-lines">
-            <Link to='/lineas'>
+            <Link to='/paradas'>
             Añade más paradas
             </Link>
             </div>

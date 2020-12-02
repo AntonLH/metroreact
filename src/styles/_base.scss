@@ -40,6 +40,7 @@ body {
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.20) 0px 4px 8px;
     margin-bottom: 12px;
+	background-color: #fff;
     a{
         text-decoration: none;
         color: #000;
@@ -122,9 +123,6 @@ body {
     } 
     .info{
         padding: 10px;
-        background-color: white;
-        border-bottom-right-radius: 16px;
-        border-bottom-left-radius: 16px;        
     }
     .icon-wrapper {
         margin: 0;
@@ -162,6 +160,17 @@ body {
 }
 
 .search{
+	.card .search-button {
+		width: 100%;
+		color: #fff;
+		background: #f1592a;
+		padding: 10px;
+		display: block;
+		text-align: center;
+		text-transform: uppercase;
+		margin-top: 10px;
+		border-radius: 0px 0px 16px 16px;
+	}
     .card .info{
         padding: 15px;
     }
@@ -187,4 +196,9 @@ body {
 
 .flex{
     display: flex;
+}
+@media(min-width: 800px) {
+	.flex-md{
+		display: flex;
+	}
 }

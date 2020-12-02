@@ -71,13 +71,18 @@ const Home = () => {
     return (
         <div className="home">
         <div className="card lines">
-		<Link to='/lineas'>
+		<Link to='/paradas'>
         <h2>Todas las paradas</h2>
         </Link>
         </div>
-        <CardSwiper data={data} error={error} loading={loading} now={now} title="Mis líneas" classname="mylines" showDistance={false} lastTrips={true} showAddButton={true} sliceNum={0} />
-        <Buscador data={dataAll} error={errorAll} loading={loadingAll} />
-        <CardSwiper data={dataAll} error={errorAll} loading={loadingAll} now={now} title="Líneas cercanas" classname="near-lineas" showDistance={true} lastTrips={false} showAddButton={false} sliceNum={6} />
+        <CardSwiper data={data} error={error} loading={loading} now={now} title="Mis paradas" classname="mylines" showDistance={false} lastTrips={true} showAddButton={true} sliceNum={0} />
+		<div className="search-container">
+		<div className="title-search">
+		<h2>Busca tu próximo viaje en Metro Bilbao</h2>
+		</div>
+	    <Buscador data={dataAll} error={errorAll} loading={loadingAll} />
+		</div>
+        <CardSwiper data={dataAll} error={errorAll} loading={loadingAll} now={now} title="Paradas cercanas" classname="near-lineas" showDistance={true} lastTrips={false} showAddButton={false} sliceNum={15} />
         </div>
 
     )

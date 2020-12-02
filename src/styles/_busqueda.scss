@@ -4,7 +4,10 @@
     .search{
         margin: 60px 20px 0px 20px;
     }
-
+	.flex-md .card{
+		position: sticky;
+		top: 70px;	
+	}
 	.header {
         background-color: #f1592a;
         color: #fff;

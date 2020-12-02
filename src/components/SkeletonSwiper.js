@@ -7,6 +7,7 @@ import 'swiper/swiper.scss';
 export const SkeletonSwiper = (props) => {
 	const { title, classname, lastTrips, showDistance } = props;
 
+	const slidesPerView=window.innerWidth/320;
     return (
         <div className={classname}>
         <h2>{title}</h2>
@@ -14,7 +15,7 @@ export const SkeletonSwiper = (props) => {
           spaceBetween={50}
           slidesOffsetBefore={30}
           slidesOffsetAfter={30}
-          slidesPerView={1.4}
+          slidesPerView={slidesPerView}
         >
           <SwiperSlide>
             <div className="card">

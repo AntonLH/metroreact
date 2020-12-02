@@ -128,10 +128,10 @@ export const Buscador = (props) => {
                 </div>
             </MuiPickersUtilsProvider>
             </ThemeProvider>
-            <Link className="search-button" to={{ pathname: '/busqueda', state: { fromId: selectedFromStop,  date: selectedDate}}}>
+        </div>
+            <Link className="search-button" to={{ pathname:  `/busqueda/${selectedFromStop}`, state: { date: selectedDate}}}>
             Buscar
             </Link>
-        </div>
         </div>
         </div>
     ) 
