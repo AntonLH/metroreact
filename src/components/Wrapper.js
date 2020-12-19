@@ -40,8 +40,8 @@ const Wrapper = () => {
                 <main>
                 <Switch>
                   <Route exact path="/" component={Home} />
-                  <Route exact path="/lineas" component={Lineas} />
-                  <Route exact path="/busqueda" component={Busqueda} />
+                  <Route exact path="/paradas" component={Lineas} />
+                  <Route exact path="/busqueda/:id" component={Busqueda} />
                   <Route exact path="/parada/:id" component={Parada} />
                   <Route exact path="/trip/:id" component={Trip} />
                 </Switch>

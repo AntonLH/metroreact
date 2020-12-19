@@ -64,7 +64,7 @@ const Paradas = () => {
 
     if (loading) return (
 
-        <div className="lineas">
+        <div className="paradas">
 			<div className="back"><Link to='/'></Link></div>
 			<div className="map">
 			<Map center={position} zoom={13} maxZoom={19}>
@@ -98,7 +98,7 @@ const Paradas = () => {
 
 	
 	return (
-        <div className="lineas">
+        <div className="paradas">
 			<div className="back"><Link to='/'></Link></div>
 			<div className="map">
 			<Map center={position} zoom={13} maxZoom={19}>
@@ -112,7 +112,7 @@ const Paradas = () => {
 					return (
 						<Marker key={stop_id} position={coordinates}>
 						<Popup>
-						<Link to={{ pathname: `/parada/${stop_id}`}}>{stop_name}</Link>
+						<Link to={{ pathname: `/parada/${stop_id}`, state: { backURL: "/paradas"}}}>{stop_name}</Link>
 						</Popup>
 						</Marker>
 					)
@@ -127,7 +127,7 @@ const Paradas = () => {
 				const minuteDiff = getMinuteDiff(stringTimeToDate(arrival_time), now.current);
 				return  (
 					<li key={stop_id}>
-					<Link to={{ pathname: `/parada/${stop_id}`, state: { backURL: "/lineas"}}}>
+					<Link to={{ pathname: `/parada/${stop_id}`, state: { backURL: "/paradas"}}}>
 					<h3>{stop_name}</h3>
 					</Link>
 					<button className={(prefs.split(",").indexOf(stop_id)>0) ? "remove" : "add" } data-stop={stop_id} onClick={handleClick}></button>

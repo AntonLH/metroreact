@@ -40,8 +40,10 @@ export const CardSwiper = (props) => {
         console.log(data.stops)
     }
     if(sliceNum>0){
-        sortedStops.slice(0,sliceNum);
+        sortedStops=sortedStops.slice(0,sliceNum);
     }
+
+	const slidesPerView=window.innerWidth/320;
 
     return (
         <div>
@@ -51,7 +53,7 @@ export const CardSwiper = (props) => {
           spaceBetween={50}
           slidesOffsetBefore={30}
           slidesOffsetAfter={30}
-          slidesPerView={1.4}
+          slidesPerView={slidesPerView}
         >
 			{sortedStops.map(stop => {
 				const { stop_id, stop_name, stop_times, stop_times_aggregate, image, distance} = stop;
@@ -77,7 +79,7 @@ export const CardSwiper = (props) => {
 						const arrival_time_date=stringTimeToDate(arrival_time);
 						const minuteDiff = getMinuteDiff(arrival_time_date, now.current);
 						return  (
-							<p className={trip.direction_id ? "icon-wrapper departure" : "icon-wrapper arrival"}>{minuteDiff} · {trip.trip_headsign} </p>
+							<p className={trip.direction_id ? "icon-wrapper departure" : "icon-wrapper arrival"}>{minuteDiff} · {trip.trip_headsign} {trip.incidents && trip.incidents.length> 0 ? <span className="alert">{"Llega " +trip.incidents[0].minutes+" minutos tarde" }</span> : "" }</p>
 						)}
 					)}
                     { lastTrips && <>
@@ -109,7 +111,7 @@ export const CardSwiper = (props) => {
             { showAddButton && 
             <SwiperSlide>
             <div className="card add-lines">
-            <Link to='/lineas'>
+            <Link to='/paradas'>
             Añade más paradas
             </Link>
             </div>

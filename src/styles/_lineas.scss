@@ -1,4 +1,24 @@
-.lineas {
+@media(min-width: 800px) {
+.paradas{
+	display: flex;
+	.map{
+		z-index: 1;
+		height: 100vh;
+		width: 50%;
+	}
+	.leaflet-container{
+		height: 100vh;
+	}
+    ul{
+       height: 100vh;
+	   margin: 0;
+	   width: 50%;
+	   overflow: auto;
+	}
+}
+}
+@media(max-width: 800px) {
+.paradas {
     display: flex;
     flex-direction: column;
 	.map{
@@ -11,6 +31,11 @@
 	}
     ul{
         margin-top: 65vh;
+	}
+}
+}
+.paradas {
+    ul{
         z-index: 10;
         background-color: #fff;
         li{

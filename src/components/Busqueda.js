@@ -41,12 +41,13 @@ query Stops {
 
 const Busqueda = (props) => {
 
-    const { fromId, date } = props.location.state;
+    let date;
+	if(props.location.state) date = props.location.state.date;
+	let fromId=props.match.params.id;
 	const now = useRef(new Date());
 	let now_string= format(now.current, "HH:mm:ss")
     let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
     if(date!==undefined){
-    console.log(date);
         now_string= format(date, "HH:mm:ss")
         service_id=getServiceId(date);
     }
@@ -63,9 +64,9 @@ const Busqueda = (props) => {
 			<div className="header">
                 <div className="back"><Link to='/'></Link></div>
             </div>
-            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
+            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date ? date : now.current} />
 			<div className="content">
-                <h2>{format(date, "dd/MM/yyyy HH:mm")}</h2>
+                <h2>{format(date ? date : now.current, "dd/MM/yyyy HH:mm")}</h2>
                 <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
                 <p>Último metro hacia <Skeleton width={150} /> a las: <Skeleton width={50} /></p>
                 <Trips data={data} error={error} loading={loading} id={fromId} now={date ? date : now.current} showMinutes={false}/>
@@ -90,10 +91,10 @@ const Busqueda = (props) => {
                 )
                 }
             </div>
-            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date} />
+            <Buscador data={dataAll} error={errorAll} loading={loadingAll} selectedFromId={fromId} selectedDateProps={date ? date : now.current} />
             { data &&
 			<div className="content">
-                <h2>{format(date, "dd/MM/yyyy HH:mm")}</h2>
+                <h2>{format(date ? date : now.current, "dd/MM/yyyy HH:mm")}</h2>
                 {data.stop_times_aggregate.nodes.map(stop_time => {
                     const { departure_time, trip } = stop_time;
                     if(trip.direction_id && !last_direction_true){

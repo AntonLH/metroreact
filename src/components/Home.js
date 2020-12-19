@@ -10,7 +10,7 @@ import 'swiper/swiper.scss';
 
 
 const PARADAS = gql`
-query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
+query NextTrips($now: time!, $now_timestamp: timestamp!, $today: timestamp!, $stops: [String!], $service_id: String!) {
   stops(where: {location_type: {_eq: 0}, stop_id: {_in: $stops}}, order_by: {stop_name: asc}) {
     stop_id
     stop_name
@@ -21,6 +21,9 @@ query NextTrips($now: time!, $stops: [String!], $service_id: String!) {
         trip_headsign
 		trip_id
         direction_id
+        incidents(where: {created_at: {_gt: $today}, _and: {created_at: {_lt: $now_timestamp}}}){
+            minutes
+        }
       }
     }
     stop_times_aggregate(order_by: {departure_time: desc}, limit: 10, where: {trip: {service_id: {_eq: $service_id}}}) {
@@ -56,8 +59,12 @@ query Stops($now: time!, $service_id: String!) {
 
 const Home = () => {
 	const now = useRef(new Date());
+	const today = useRef(new Date());
+    today.current.setHours(0);
+    today.current.setMinutes(0);
     let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
     console.log(service_id);
+    console.log(now.current);
 
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
 	const stops = localStorage.getItem("id") ? localStorage.getItem("id").split(",") : [];
@@ -65,19 +72,24 @@ const Home = () => {
 		variables: {now: now_string, service_id: service_id },
     });
 	const { loading, error, data } = useQuery(PARADAS, {
-		variables: {now: now_string, stops: stops, service_id: service_id },
+        variables: {now: now_string, now_timestamp: now.current, today: today.current, stops: stops, service_id: service_id },
     });
 
     return (
         <div className="home">
         <div className="card lines">
-		<Link to='/lineas'>
+		<Link to='/paradas'>
         <h2>Todas las paradas</h2>
         </Link>
         </div>
-        <CardSwiper data={data} error={error} loading={loading} now={now} title="Mis líneas" classname="mylines" showDistance={false} lastTrips={true} showAddButton={true} sliceNum={0} />
-        <Buscador data={dataAll} error={errorAll} loading={loadingAll} />
-        <CardSwiper data={dataAll} error={errorAll} loading={loadingAll} now={now} title="Líneas cercanas" classname="near-lineas" showDistance={true} lastTrips={false} showAddButton={false} sliceNum={6} />
+        <CardSwiper data={data} error={error} loading={loading} now={now} title="Mis paradas" classname="mylines" showDistance={false} lastTrips={true} showAddButton={true} sliceNum={0} />
+		<div className="search-container">
+		<div className="title-search">
+		<h2>Busca tu próximo viaje en Metro Bilbao</h2>
+		</div>
+	    <Buscador data={dataAll} error={errorAll} loading={loadingAll} />
+		</div>
+        <CardSwiper data={dataAll} error={errorAll} loading={loadingAll} now={now} title="Paradas cercanas" classname="near-lineas" showDistance={true} lastTrips={false} showAddButton={false} sliceNum={15} />
         </div>
 
     )

@@ -18,11 +18,14 @@ L.Icon.Default.mergeOptions({
 });
 
 const SALIDAS = gql`
-query NextStops($id: String!, $parent_id: String!, $now: time!, $service_id: String!) {
+query NextStops($id: String!, $now_timestamp: timestamp!, $today: timestamp!, $parent_id: String!, $now: time!, $service_id: String!) {
   stop_times(where: {trip: {service_id: {_eq: $service_id}}, stop_id: {_eq: $id}, arrival_time: {_gt: $now}}, order_by: {arrival_time: asc}, limit: 10) {
     arrival_time
     trip {
       trip_headsign
+        incidents(where: {created_at: {_gt: $today}, _and: {created_at: {_lt: $now_timestamp}}}){
+            minutes
+        }
     }
     trip_id
   }
@@ -51,15 +54,18 @@ query NextStops($id: String!, $parent_id: String!, $now: time!, $service_id: Str
 const Parada = (props) => {
 
     const id = props.match.params.id;
-    const { backURL } = props.location.state;
+    const backURL = props.location.state? props.location.state.backURL : "/";
     const parent_id = id.substr(0,id.indexOf("."));
 	const url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 	const now = useRef(new Date());
+	const today = useRef(new Date());
+    today.current.setHours(0);
+    today.current.setMinutes(0);
 	const now_string= now.current.getHours()+":"+now.current.getMinutes()+":"+now.current.getSeconds();
     let service_id=sessionStorage.getItem("service_id")==undefined ? getServiceId(now) : sessionStorage.getItem("service_id");
 
 	const { loading, error, data } = useQuery(SALIDAS, {
-		variables: {id: id, parent_id: parent_id, now: now_string, service_id: service_id}
+		variables: {id: id, parent_id: parent_id, now: now_string, now_timestamp: now.current, today: today.current, service_id: service_id}
     });
 
     if (loading) return (

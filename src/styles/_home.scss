@@ -12,22 +12,66 @@
             padding: 100px 0px 30px 30px;
             color: #fff;
         }
-    }
-    .search{
-        margin: 0px 30px;
-    }
-    > ul{
-        list-style: none;
-        > li{
-            margin: 20px 0px;
-            &::before{
-                content: "";
-                width: 23px;
-                height: 15px;
-                margin-right: 10px;
-                display: inline-block;
-                background-image: url("../icons/svg/metrobilbao_logo.svg");
-            }
+	}
+	@media(min-width: 800px) {
+		.search-container {
+			display:flex;
+			background-image: linear-gradient( 105deg, #e67e47 , #ec8b58 65%, #eff1f4 65.06% );
+			.search{
+				width:50%;
+				margin: 0;
+			}
+			.card{
+				margin: 20%;
+			}
+			.title-search {
+				width: 50%;
+				height: 50vh;
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+				h2{
+					color: white;
+					font-size: 40px;
+					width: 61%;
+					margin-left: 20%;
+				}
+			}
+		}
+	}
+	@media(max-width: 800px) {
+		.search-container {
+			margin: 0px 30px;
+			.title-search {
+				display:none;
+			}
+		}
+	}
+	.search-container{
+		.card .info label {
+			text-transform: uppercase;
+			font-size: 14px;
+			font-weight: 500;
+			margin-bottom: 3px;
+			display: block;
+			color: #000;
+			font-family: unset;
+			transform: scale(1.0);
+		}
+	}
+
+	> ul{
+		list-style: none;
+		> li{
+			margin: 20px 0px;
+			&::before{
+				content: "";
+				width: 23px;
+				height: 15px;
+				margin-right: 10px;
+				display: inline-block;
+				background-image: url("../icons/svg/metrobilbao_logo.svg");
+			}
             a{
                 text-decoration: none;
 
